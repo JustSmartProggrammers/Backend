@@ -1,2 +1,4 @@
-package com.example.dao;public class PostsDAO {
+package com.example.dao;
+
+public class PostsDAO {
 }
