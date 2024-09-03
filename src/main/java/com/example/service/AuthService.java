@@ -38,6 +38,10 @@ public class AuthService {
         return null;
     }
 
+    public boolean isEmailAvailable(String email) {
+        return !userDAO.isEmailExists(email);
+    }
+
     private boolean isValidEmail(String email) {
         return email.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }

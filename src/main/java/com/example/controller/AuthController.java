@@ -38,6 +38,8 @@ public class AuthController extends HttpServlet {
                 handleLogin(req, resp);
             } else if ("/logout".equals(path)) {
                 handleLogout(req, resp);
+            } else if ("/check-email".equals(path)) {
+                handleCheckEmail(req, resp);
             } else {
                 sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Invalid path");
             }
@@ -86,6 +88,25 @@ public class AuthController extends HttpServlet {
             session.invalidate();
         }
         sendJsonResponse(resp, HttpServletResponse.SC_OK, createJsonResponse("Logout successful"));
+    }
+
+    private void handleCheckEmail(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        JsonObject jsonRequest = readJsonRequest(req);
+        String email = jsonRequest.get("email").getAsString();
+
+        if (email == null || email.isEmpty()) {
+            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Email is required");
+            return;
+        }
+
+        boolean isAvailable = authService.isEmailAvailable(email);
+        if (isAvailable) {
+            JsonObject jsonResponse = new JsonObject();
+            jsonResponse.addProperty("message", "Email is available");
+            sendJsonResponse(resp, HttpServletResponse.SC_OK, jsonResponse);
+        } else {
+            sendErrorResponse(resp, HttpServletResponse.SC_CONFLICT, "Email is already in use");
+        }
     }
 
     private JsonObject readJsonRequest(HttpServletRequest req) throws IOException {
