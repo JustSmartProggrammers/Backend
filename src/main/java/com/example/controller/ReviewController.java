@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/review/*")
+@WebServlet("/api/v1/review/*")
 public class ReviewController extends HttpServlet {
 
     private ReviewService reviewService;

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.BufferedReader;
 
-@WebServlet("/sms/*")
+@WebServlet("/api/v1/sms/*")
 public class SmsController extends HttpServlet {
 
     private PhoneVerificationService phoneVerificationService;

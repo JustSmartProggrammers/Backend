@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.BufferedReader;
 
-@WebServlet("/auth/*")
+@WebServlet("/api/v1/auth/*")
 public class AuthController extends HttpServlet {
 
     private AuthService authService;

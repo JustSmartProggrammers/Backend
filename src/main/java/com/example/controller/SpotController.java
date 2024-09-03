@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@WebServlet("/spots/*")
+@WebServlet("/api/v1/spots/*")
 public class SpotController extends HttpServlet {
 
     private SpotService spotService;
