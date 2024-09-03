@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Untree.co">
+  <link rel="shortcut icon" href="favicon.png">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap4" />
+
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="css/tiny-slider.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+  <title>Sports Spot</title>
+
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+    }
+
+    .community-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+    }
+
+    .header-title {
+        font-size: 32px;
+        font-weight: bold;
+    }
+
+    .menu-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .filter-button {
+        background-color: #d9d9d9;
+        border: 1px solid black;
+        padding: 5px 15px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .filter-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        width: 300px;
+        border: 1px solid black;
+    }
+
+    .filter-popup input[type="checkbox"],
+    .filter-popup input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .filter-popup label {
+        margin-right: 10px;
+    }
+
+    .filter-popup .close-button {
+        background-color: #d9d9d9;
+        border: 1px solid black;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 14px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .table-container {
+        width: 100%;
+        height: auto;
+		padding: 20px 20px;
+		padding-right: 220px;
+		padding-left: 220px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: center;
+        border: none;
+        word-wrap: break-word;
+    }
+
+    th {
+        background-color: #3b5d50;
+        color: white;
+        height: 20px; /* 줄어든 높이 */
+    }
+
+    .no-content {
+        text-align: center;
+        padding: 20px;
+        font-size: 18px;
+        color: gray;
+    }
+
+    .pagination-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        position: relative;
+    }
+
+    .pagination {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .pagination button {
+        background-color: #f9f9f9;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .pagination button:hover {
+        color: green;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .write-button, .filter-button {
+        background-color: #d9d9d9;
+        border: 1px solid black;
+        padding: 3px 10px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+</style>
+
+</head>
+
+<body>
+  <!-- Start Header/Navigation -->
+  <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+
+	<div class="container">
+		<a class="navbar-brand" href="index.html">Sports Spot<span>.</span></a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarsFurni">
+			<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+				<li><a class="nav-link" href="index.html">메인화면</a></li>
+				<li><a class="nav-link" href="reservation.html">스포츠 시설 정보</a></li>
+				<li><a class="nav-link" href="contact.html">커뮤니티</a></li>
+			</ul>
+
+			<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+				<li><a class="nav-link" href="login.html"><img src="images/user.svg"></a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<!-- End Header/Navigation -->
+
+<div class="hero">
+	<div class="container">
+		<div class="row justify-content-between">
+			<div class="col-lg-5">
+				<div class="intro-excerpt">
+					<h1 style="white-space: nowrap;">커뮤니티</h1>
+				</div>
+			</div>
+			<div class="col-lg-7">
+			</div>
+		</div>
+	</div>
+</div>
+
+   <!-- Community Section -->
+   <div class="community-container">
+	<div class="community-header">
+	</div>
+
+	<div class="filter-popup" id="filter-popup">
+		<button class="close-button" onclick="toggleFilter()">X</button>
+		<div>
+			<input type="radio" name="filter" id="date" value="date">
+			<label for="date">날짜 지정</label>
+			<div>
+				<input type="text" placeholder="YYYY">
+				<input type="text" placeholder="MM">
+				<input type="text" placeholder="DD">
+				~
+				<input type="text" placeholder="YYYY">
+				<input type="text" placeholder="MM">
+				<input type="text" placeholder="DD">
+			</div>
+		</div>
+		<div>
+			<input type="radio" name="filter" id="region" value="region">
+			<label for="region">지역 지정</label>
+			<div>
+				<button>서울</button>
+				<button>인천</button>
+				<button>대전</button>
+				<button>세종</button>
+				<button>부산</button>
+				<button>광주</button>
+				<button>울산</button>
+				<button>경기</button>
+				<button>강원</button>
+				<button>제주</button>
+			</div>
+		</div>
+		<div>
+			<input type="radio" name="filter" id="category" value="category">
+			<label for="category">종목 지정</label>
+			<div>
+				<button>축구</button>
+				<button>야구</button>
+				<button>농구</button>
+				<button>테니스</button>
+				<button>수영</button>
+				<button>배드민턴</button>
+				<button>탁구</button>
+				<button>골프</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="table-container">
+		<table>
+			<thead>
+			<tr>
+				<th style="text-align: left;">번호</th>
+				<th style="text-align: left;">지역</th>
+				<th style="text-align: left;">종목</th>
+				<th style="text-align: center;">제목</th>
+				<th style="text-align: right;">작성자</th>
+				<th style="text-align: right;">작성일</th>
+				<th style="text-align: right;">조회수</th>
+			</tr>
+			</thead>
+			<tbody id="table-body">
+			<!-- 글이 없을 경우 -->
+			<tr class="no-content">
+				<td colspan="7">글이 없습니다.</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="pagination-container">
+		<div class="pagination">
+			<button>&lt;&lt;</button>
+			<button>&lt;</button>
+			<button>1</button>
+			<button>&gt;</button>
+			<button>&gt;&gt;</button>
+		</div>
+		<div class="action-buttons">
+			<button class="write-button">글쓰기</button>
+			<button class="filter-button">필터링</button>
+		</div>
+	</div>
+</div>
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/tiny-slider.js"></script>
+<script src="js/custom.js"></script>
+
+<script>
+	function toggleFilter() {
+		var filterPopup = document.getElementById('filter-popup');
+		if (filterPopup.style.display === 'block') {
+			filterPopup.style.display = 'none';
+		} else {
+			filterPopup.style.display = 'block';
+		}
+	}
+</script>
+
+</body>
+</html>

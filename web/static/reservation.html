@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Untree.co">
+  <link rel="shortcut icon" href="favicon.png">
+
+  <meta name="description" content="" />
+  <meta name="keywords" content="bootstrap, bootstrap4" />
+
+  <!-- Bootstrap CSS -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="css/tiny-slider.css" rel="stylesheet">
+  <link href="css/style.css" rel="stylesheet">
+
+  <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .header-buttons {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0 20px;
+    }
+    
+    .header-buttons select {
+        padding: 10px 20px; /* 세로 패딩과 가로 패딩 조정 */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 16px; /* 버튼 텍스트 크기 조정 */
+        box-sizing: border-box; /* Padding과 border를 포함한 크기 조정 */
+        background-color: #c0c0c0; /* 배경색 */
+        width: 700px; /* 드롭다운 너비 설정 */
+        margin: 0 5px; /* 드롭다운 사이에 간격 추가 */
+    }
+    
+    #searchContainer {
+        display: none; /* 기본적으로 숨김 */
+        margin-top: 10px;
+        padding-right: 300px;
+        padding-left: 300px;
+        box-sizing: border-box;
+        display: flex; /* Flexbox를 사용하여 수평 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+        gap: 10px; /* 입력 필드와 버튼 사이의 간격 */
+    }
+    
+    #searchInput {
+        width: calc(100% - 60px); /* 너비 조정 (필요에 따라 수정) */
+        padding: 10px 20px; /* 위아래 패딩: 10px, 좌우 패딩: 20px */
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    /* 추가된 카드 스타일 */
+    .facility-cards {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 카드 3개씩 한 줄에 배치 */
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .facility-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        cursor: pointer; /* 마우스를 올렸을 때 클릭 가능하게 변경 */
+    }
+
+    .facility-card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+
+    .facility-card .status {
+        font-size: 1em;
+        font-weight: bold;
+        color: #28a745; /* 상태 색상 (예: 운영중 - 녹색) */
+        margin-bottom: 10px;
+    }
+
+    .facility-card .name {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .facility-card .hours {
+        font-size: 0.9em;
+        color: #777;
+    }
+
+    .facility-section {
+      padding-left: 150px; /* 원하는 왼쪽 패딩 값을 지정하세요 */
+      padding-right: 150px; /* 원하는 오른쪽 패딩 값을 지정하세요 */
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    .pagination button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: #c0c0c0;
+        color: white;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .pagination span {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+    
+    /* 반응형 */
+    @media (max-width: 768px) {
+        .facility-cards {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .facility-cards {
+            grid-template-columns: 1fr;
+        }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Start Header/Navigation -->
+  <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
+    <div class="container">
+      <a class="navbar-brand" href="../index.html">Sports Spot<span>.</span></a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsFurni">
+        <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" href="../index.html">메인화면</a>
+          </li>
+          <li class="active"><a class="nav-link" href="blog.html">스포츠 시설 정보</a></li>
+          <li><a class="nav-link" href="contact.html">커뮤니티</a></li>
+        </ul>
+
+        <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+          <li>
+            <a class="nav-link" href="login.html">
+              <img src="images/user.svg" alt="User Icon">
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- End Header/Navigation -->
+
+  <!-- Start Hero Section -->
+  <div class="hero">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-lg-5">
+          <div class="intro-excerpt">
+            <h1>시설정보 및 예약</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Facility Type Dropdowns -->
+  <header>
+    <div class="header-buttons">
+      <select id="facilityDropdown">
+        <option value="" disabled selected>종목명 선택</option>
+        <option value="축구장">축구장</option>
+        <option value="배드민턴장">배드민턴장</option>
+        <option value="테니스장">테니스장</option>
+        <option value="풋살장">풋살장</option>
+        <option value="야구장">야구장</option>
+        <option value="농구장">농구장</option>
+      </select>
+      <select id="searchDropdown">
+        <option value="" disabled selected>지역 선택</option>
+        <option value="서울">서울</option>
+        <option value="부산">부산</option>
+        <option value="대구">대구</option>
+        <option value="인천">인천</option>
+        <option value="광주">광주</option>
+        <option value="대전">대전</option>
+      </select>
+    </div>
+  </header>
+
+  <!-- Facility Cards Section -->
+  <section class="facility-section">
+    <div id="facilityCards" class="facility-cards">
+      <!-- Facility cards will be dynamically inserted here -->
+    </div>
+    <div class="pagination">
+      <button id="prevPage">Previous</button>
+      <span id="pageNumbers">Page 1 of 2</span>
+      <button id="nextPage">Next</button>
+    </div>
+  </section>
+  <!-- End Facility Cards Section -->
+
+</div>
+</div>
+</footer>
+<!-- End Footer Section -->
+
+<!-- JavaScript to handle dropdown selections and pagination -->
+<script>
+// Pagination functionality
+let currentPage = 1;
+const totalPages = 2;
+const cardsPerPage = 9;
+const facilityData = [
+  { img: "https://via.placeholder.com/300x150?text=1", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=2", status: "비운영 예약불가", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=3", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=4", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=5", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=6", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=7", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=8", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=9", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=10", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=11", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" },
+  { img: "https://via.placeholder.com/300x150?text=12", status: "운영중 예약가능", name: "광진 테니스장", hours: "9:00 ~ 18:00" }
+];
+
+// 시설 카드를 생성하고 페이지에 추가하는 함수
+function renderFacilityCards(page) {
+  const start = (page - 1) * cardsPerPage;
+  const end = start + cardsPerPage;
+  const paginatedData = facilityData.slice(start, end);
+
+  const facilityCardsContainer = document.getElementById('facilityCards');
+  facilityCardsContainer.innerHTML = '';
+
+  paginatedData.forEach((facility, index) => {
+    const facilityCard = document.createElement('div');
+    facilityCard.classList.add('facility-card');
+
+    facilityCard.innerHTML = `
+      <img src="${facility.img}" alt="${facility.name}">
+      <div class="status">${facility.status}</div>
+      <div class="name">${facility.name}</div>
+      <div class="hours">${facility.hours}</div>
+    `;
+
+    // 카드 클릭 시 blog.html로 이동하는 이벤트 추가
+    facilityCard.addEventListener('click', () => {
+      window.location.href = `blog.html#facility-${(start + index + 1)}`;
+    });
+
+    facilityCardsContainer.appendChild(facilityCard);
+  });
+
+  // 페이지 번호 업데이트
+  document.getElementById('pageNumbers').textContent = `Page ${page} of ${totalPages}`;
+}
+
+// 페이지 이동 버튼에 대한 이벤트 핸들러 추가
+document.getElementById('prevPage').addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderFacilityCards(currentPage);
+  }
+});
+
+document.getElementById('nextPage').addEventListener('click', () => {
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderFacilityCards(currentPage);
+  }
+});
+
+// 초기 페이지 렌더링
+renderFacilityCards(currentPage);
+</script>
+<!-- End Hero Section -->
+      
+      <!-- Start Footer Section -->
+      <footer class="footer-section">
+        <div class="container relative">
+           <div class="row g-5 mb-5">
+             <div class="col-lg-4">
+               <div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Sports Spot<span>.</span></a></div>
+               <p class="mb-4">National Public Sports Facility Information Comprehensive Service</p>
+  
+               <ul class="list-unstyled custom-social">
+                 <li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
+                 <li><a href="#"><span class="fa fa-brands fa-twitter"></span></a></li>
+                 <li><a href="#"><span class="fa fa-brands fa-instagram"></span></a></li>
+                 <li><a href="#"><span class="fa fa-brands fa-linkedin"></span></a></li>
+               </ul>
+             </div>
+  
+             <div class="col-lg-8">
+               <div class="row links-wrap">
+                 <div class="col-6 col-sm-6 col-md-3">
+                    <ul class="list-unstyled">
+                      <li><a href="#">About us</a></li>
+                      <li><a href="#">Services</a></li>
+                      <li><a href="#">Blog</a></li>
+                      <li><a href="#">Contact us</a></li>
+                    </ul>
+                 </div>
+  
+                 <div class="col-6 col-sm-6 col-md-3">
+                    <ul class="list-unstyled">
+                      <li><a href="#">Support</a></li>
+                      <li><a href="#">Knowledge base</a></li>
+                      <li><a href="#">Live chat</a></li>
+                    </ul>
+                 </div>
+  
+                 <div class="col-6 col-sm-6 col-md-3">
+                    <ul class="list-unstyled">
+                      <li><a href="#">Jobs</a></li>
+                      <li><a href="#">Our team</a></li>
+                      <li><a href="#">Leadership</a></li>
+                      <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                 </div>
+  
+                 <div class="col-6 col-sm-6 col-md-3">
+                    <ul class="list-unstyled">
+                      <li><a href="#">Nordic Chair</a></li>
+                      <li><a href="#">Kruzo Aero</a></li>
+                      <li><a href="#">Ergonomic Chair</a></li>
+                    </ul>
+                 </div>
+               </div>
+             </div>
+           </div>
+  
+           <div class="border-top copyright">
+             <div class="row pt-4">
+               <div class="col-lg-6">
+                 <p class="mb-2 text-center text-lg-start">Copyright &copy;<script>document.write(new Date().getFullYear());</script>. All Rights Reserved. &mdash; Designed with love by <a href="https://untree.co">Untree.co</a> Distributed By <a hreff="https://themewagon.com">ThemeWagon</a>  <!-- License information: https://untree.co/license/ -->
+           </p>
+               </div>
+  
+               <div class="col-lg-6 text-center text-lg-end">
+                 <ul class="list-unstyled d-inline-flex ms-auto">
+                    <li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                 </ul>
+               </div>
+             </div>
+           </div>
+        </div>
+      </footer>
+  
+<!-- JavaScript Files -->
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/tiny-slider.js"></script>
+<script src="js/custom.js"></script>
+</body>
+</html>
