@@ -125,17 +125,20 @@ public class ReviewController extends HttpServlet {
         try {
             Long reviewId = Long.parseLong(pathInfo.substring(1));
             JsonNode jsonRequest = readJsonRequest(req);
-            String content = jsonRequest.get("content").asText();
 
-            Review review = reviewService.getReviewById(reviewId);
-            if (review == null) {
-                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Review not found");
+            if (!jsonRequest.has("content")) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Content is required");
                 return;
             }
 
-            review.setContent(content);
-            reviewService.updateReview(review);
-            sendJsonResponse(resp, HttpServletResponse.SC_OK, review);
+            String content = jsonRequest.get("content").asText();
+
+            Review updatedReview = reviewService.updateReviewContent(reviewId, content);
+            if (updatedReview != null) {
+                sendJsonResponse(resp, HttpServletResponse.SC_OK, updatedReview);
+            } else {
+                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Review not found");
+            }
         } catch (NumberFormatException e) {
             sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid review ID");
         } catch (SQLException e) {

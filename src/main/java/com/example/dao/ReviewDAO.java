@@ -79,13 +79,16 @@ public class ReviewDAO {
         return null;
     }
 
-    public void updateReview(Review review) throws SQLException {
+    public void updateReviewContent(Review review) throws SQLException {
         String sql = "UPDATE review SET content = ? WHERE id = ?";
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, review.getContent());
             stmt.setLong(2, review.getId());
-            stmt.executeUpdate();
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Updating review failed, no rows affected.");
+            }
         }
     }
 

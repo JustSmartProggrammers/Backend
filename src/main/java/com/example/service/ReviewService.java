@@ -30,9 +30,16 @@ public class ReviewService {
         return reviewDAO.getReviewById(reviewId);
     }
 
-    public void updateReview(Review review) throws SQLException {
-        reviewDAO.updateReview(review);
+    public Review updateReviewContent(Long reviewId, String content) throws SQLException {
+        Review review = reviewDAO.getReviewById(reviewId);
+        if (review != null) {
+            review.setContent(content);
+            reviewDAO.updateReviewContent(review);
+            return review;
+        }
+        return null;
     }
+
 
     public void deleteReview(Long reviewId) throws SQLException {
         reviewDAO.deleteReview(reviewId);
