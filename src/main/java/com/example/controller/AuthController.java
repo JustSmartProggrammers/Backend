@@ -32,16 +32,21 @@ public class AuthController extends HttpServlet {
         String path = req.getPathInfo();
 
         try {
-            if ("/signup".equals(path)) {
-                handleSignup(req, resp);
-            } else if ("/login".equals(path)) {
-                handleLogin(req, resp);
-            } else if ("/logout".equals(path)) {
-                handleLogout(req, resp);
-            } else if ("/check-email".equals(path)) {
-                handleCheckEmail(req, resp);
-            } else {
-                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Invalid path");
+            switch (path) {
+                case "/signup":
+                    handleSignup(req, resp);
+                    break;
+                case "/login":
+                    handleLogin(req, resp);
+                    break;
+                case "/logout":
+                    handleLogout(req, resp);
+                    break;
+                case "/check-email":
+                    handleCheckEmail(req, resp);
+                    break;
+                default:
+                    sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Invalid path");
             }
         } catch (Exception e) {
             sendErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred");
