@@ -5,9 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    private static final String URL = "jdbc:mysql://rds-disaster-db-mysql.clsgwqwc6cx5.ap-northeast-2.rds.amazonaws.com:3306/disasterDB";
+    private static final String URL = "jdbc:mysql://rds-disaster-db-mysql.clsgwqwc6cx5.ap-northeast-2.rds.amazonaws.com:3306/disasterDB?useUnicode=true&characterEncoding=utf8";
     private static final String USER = "admin";
     private static final String PASSWORD = "root1234";
+
     static {
         try {
             // MySQL JDBC 드라이버 로드
