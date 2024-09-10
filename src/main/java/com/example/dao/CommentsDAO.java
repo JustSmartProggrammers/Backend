@@ -6,13 +6,16 @@ import com.example.util.DBUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class CommentsDAO {
 
     public List<Comments> getCommentsByPostId(Long postId) throws SQLException {
         List<Comments> commentsList = new ArrayList<>();
         String sql = "SELECT * FROM comments WHERE postId = ? AND parentId IS NULL AND isDeleted = FALSE";
+        return getComments(postId, commentsList, sql);
+    }
+
+    private List<Comments> getComments(Long postId, List<Comments> commentsList, String sql) throws SQLException {
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -29,32 +32,7 @@ public class CommentsDAO {
     public List<Comments> getRepliesByCommentId(Long commentId) throws SQLException {
         List<Comments> repliesList = new ArrayList<>();
         String sql = "SELECT * FROM comments WHERE parentId = ? AND isDeleted = FALSE";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, commentId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    repliesList.add(mapResultSetToComment(rs));
-                }
-            }
-        }
-        return repliesList;
-    }
-
-    public Optional<Comments> getCommentById(Long commentId) throws SQLException {
-        String sql = "SELECT * FROM comments WHERE id = ? AND isDeleted = FALSE";
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setLong(1, commentId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return Optional.of(mapResultSetToComment(rs));
-                }
-            }
-        }
-        return Optional.empty();
+        return getComments(commentId, repliesList, sql);
     }
 
     public Comments createComment(Comments comment) throws SQLException {

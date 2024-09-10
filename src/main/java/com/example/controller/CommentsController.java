@@ -5,6 +5,8 @@ import com.example.service.CommentsService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +22,12 @@ public class CommentsController extends HttpServlet {
 
     private CommentsService commentsService;
     private ObjectMapper objectMapper;
+    @Setter
+    @Getter
+    private HttpServletRequest req;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         commentsService = new CommentsService();
         objectMapper = new ObjectMapper();
     }
@@ -47,109 +52,132 @@ public class CommentsController extends HttpServlet {
                     handleDelete(pathInfo, req, resp);
                     break;
                 default:
-                    sendErrorResponse(resp, HttpServletResponse.SC_METHOD_NOT_ALLOWED, "Method not allowed");
+                    sendErrorResponse(resp, HttpServletResponse.SC_METHOD_NOT_ALLOWED, "허용되지 않은 메서드입니다.");
             }
         } catch (Exception e) {
-            sendErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An unexpected error occurred: " + e.getMessage());
+            sendErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "예상치 못한 오류가 발생했습니다: " + e.getMessage());
+            e.printStackTrace(); // 디버깅을 위해 오류 메시지 출력
         }
     }
 
     private void handleGet(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
-        // pathInfo가 null이거나 빈 문자열인 경우에 대한 처리
-        if (pathInfo == null || pathInfo.trim().isEmpty()) {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Path info is empty or null");
-            return;
-        }
+        this.req = req;
+        String[] pathParts = parsePathInfo(pathInfo);
 
-        // pathInfo 디버깅용 출력
-        System.out.println("Received pathInfo: " + pathInfo);
-
-        // 경로에서 여러 개의 슬래시 제거 및 빈 문자열 제거
-        String[] pathParts = pathInfo.split("/");
-        pathParts = java.util.Arrays.stream(pathParts).filter(part -> !part.isEmpty()).toArray(String[]::new);
-
-        try {
-            // Post ID 확인
-            if (pathParts.length >= 2 && pathParts[0].matches("\\d+")) {
-                Long postId = Long.parseLong(pathParts[0]);
-
-                // 댓글 리스트 조회
-                if (pathParts.length == 2 && "comments".equals(pathParts[1])) {
-                    List<Comments> commentsList = commentsService.getCommentsByPostId(postId);
-                    sendJsonResponse(resp, HttpServletResponse.SC_OK, objectMapper.valueToTree(commentsList));
-                }
-                // 대댓글 리스트 조회
-                else if (pathParts.length == 3 && "comments".equals(pathParts[1]) && pathParts[2].matches("\\d+")) {
-                    Long commentId = Long.parseLong(pathParts[2]);
-                    List<Comments> repliesList = commentsService.getRepliesByCommentId(commentId);
-                    sendJsonResponse(resp, HttpServletResponse.SC_OK, objectMapper.valueToTree(repliesList));
-                } else {
-                    sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid GET request path");
-                }
-            } else {
-                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid Post ID format");
+        // 경로 파싱 결과에 따른 조건 검사
+        if (pathParts.length == 2 && "comments".equals(pathParts[1])) {
+            Long postId = parseLong(pathParts[0]);
+            if (postId == null) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 게시글 ID 형식입니다.");
+                return;
             }
-        } catch (NumberFormatException e) {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid number format: " + e.getMessage());
+            List<Comments> commentsList = commentsService.getCommentsByPostId(postId);
+            sendJsonResponse(resp, HttpServletResponse.SC_OK, objectMapper.valueToTree(commentsList));
+        } else if (pathParts.length == 3 && "comments".equals(pathParts[1])) {
+            Long commentId = parseLong(pathParts[2]);
+            if (commentId == null) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 댓글 ID 형식입니다.");
+                return;
+            }
+            List<Comments> repliesList = commentsService.getRepliesByCommentId(commentId);
+            sendJsonResponse(resp, HttpServletResponse.SC_OK, objectMapper.valueToTree(repliesList));
+        } else {
+            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "잘못된 GET 요청 경로 또는 게시글 ID 형식입니다.");
         }
     }
 
 
-
-
     private void handlePost(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
-        String[] pathParts = pathInfo.split("/");
-        JsonNode requestBody = readJsonRequest(req);
-        Long userId = requestBody.get("userId").asLong();
-        String content = requestBody.get("content").asText();
+        String[] pathParts = parsePathInfo(pathInfo);
 
-        if (pathParts.length == 4) {
-            // 댓글 생성
-            Long postId = Long.parseLong(pathParts[2]);
+        if (pathParts.length == 2 && "comments".equals(pathParts[1])) {
+            Long postId = parseLong(pathParts[0]);
+            if (postId == null) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 게시글 ID 형식입니다.");
+                return;
+            }
+
+            JsonNode requestBody = readJsonRequest(req);
+            if (requestBody == null || !requestBody.has("userId") || !requestBody.has("content")) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "필수 필드 누락: userId 또는 content");
+                return;
+            }
+
+            Long userId = requestBody.get("userId").asLong();
+            String content = requestBody.get("content").asText();
+
             Comments comment = commentsService.createComment(postId, null, userId, content);
             sendJsonResponse(resp, HttpServletResponse.SC_CREATED, objectMapper.valueToTree(comment));
-        } else if (pathParts.length == 5) {
-            // 대댓글 생성
-            Long postId = Long.parseLong(pathParts[2]);
-            Long parentId = Long.parseLong(pathParts[4]);
-            Comments reply = commentsService.createComment(postId, parentId, userId, content);
-            sendJsonResponse(resp, HttpServletResponse.SC_CREATED, objectMapper.valueToTree(reply));
         } else {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid POST request path");
+            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "잘못된 POST 요청 경로입니다.");
         }
     }
 
     private void handlePut(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
-        String[] pathParts = pathInfo.split("/");
-        if (pathParts.length == 4 || pathParts.length == 5) {
-            // 댓글 또는 대댓글 수정
-            Long commentId = Long.parseLong(pathParts[pathParts.length - 1]);
+        String[] pathParts = parsePathInfo(pathInfo);
+
+        if (pathParts.length == 3 && "comments".equals(pathParts[1])) {
+            Long commentId = parseLong(pathParts[2]);
+            if (commentId == null) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 댓글 ID 형식입니다.");
+                return;
+            }
+
             JsonNode requestBody = readJsonRequest(req);
+            if (requestBody == null || !requestBody.has("content")) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "필수 필드 누락: content");
+                return;
+            }
+
             String content = requestBody.get("content").asText();
             boolean isUpdated = commentsService.updateComment(commentId, content);
+
             if (isUpdated) {
-                sendJsonResponse(resp, HttpServletResponse.SC_OK, createJsonResponse("Comment updated successfully"));
+                sendJsonResponse(resp, HttpServletResponse.SC_OK, createJsonResponse("댓글이 성공적으로 업데이트되었습니다."));
             } else {
-                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Comment not found");
+                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "댓글을 찾을 수 없습니다.");
             }
         } else {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid PUT request path");
+            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "잘못된 PUT 요청 경로입니다.");
         }
     }
 
     private void handleDelete(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
-        String[] pathParts = pathInfo.split("/");
-        if (pathParts.length == 4 || pathParts.length == 5) {
-            // 댓글 또는 대댓글 삭제
-            Long commentId = Long.parseLong(pathParts[pathParts.length - 1]);
+        this.req = req;
+        String[] pathParts = parsePathInfo(pathInfo);
+
+        if (pathParts.length == 3 && "comments".equals(pathParts[1])) {
+            Long commentId = parseLong(pathParts[2]);
+            if (commentId == null) {
+                sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "유효하지 않은 댓글 ID 형식입니다.");
+                return;
+            }
             boolean isDeleted = commentsService.deleteComment(commentId);
+
             if (isDeleted) {
-                sendJsonResponse(resp, HttpServletResponse.SC_OK, createJsonResponse("Comment deleted successfully"));
+                sendJsonResponse(resp, HttpServletResponse.SC_OK, createJsonResponse("댓글이 성공적으로 삭제되었습니다."));
             } else {
-                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "Comment not found");
+                sendErrorResponse(resp, HttpServletResponse.SC_NOT_FOUND, "댓글을 찾을 수 없습니다.");
             }
         } else {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Invalid DELETE request path");
+            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "잘못된 DELETE 요청 경로입니다.");
+        }
+    }
+
+    // 경로 정보를 파싱하여 의미 있는 배열로 반환
+    private String[] parsePathInfo(String pathInfo) {
+        if (pathInfo == null || pathInfo.trim().isEmpty()) {
+            return new String[0];
+        }
+        return pathInfo.substring(1).split("/");
+    }
+
+
+    private Long parseLong(String value) {
+        try {
+            return Long.parseLong(value);
+        } catch (NumberFormatException e) {
+            return null;
         }
     }
 
@@ -175,7 +203,5 @@ public class CommentsController extends HttpServlet {
         jsonResponse.put("message", message);
         return jsonResponse;
     }
+
 }
-
-
-

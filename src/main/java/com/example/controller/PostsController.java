@@ -23,13 +23,13 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/api/v1/posts/*")
 public class PostsController extends HttpServlet {
 
     private PostsService postsService;
     private ObjectMapper objectMapper;
+    private HttpServletRequest req;
 
     @Override
     public void init() throws ServletException {
@@ -39,7 +39,7 @@ public class PostsController extends HttpServlet {
 
         // LocalDateTime 직렬화 설정 추가
         SimpleModule module = new SimpleModule();
-        module.addSerializer(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
+        module.addSerializer(LocalDateTime.class, new JsonSerializer<>() {
             @Override
             public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
                 gen.writeString(value.format(DateTimeFormatter.ISO_DATE_TIME));
@@ -81,6 +81,7 @@ public class PostsController extends HttpServlet {
 
     // GET 요청 처리
     private void handleGet(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        this.req = req;
         if (pathInfo == null || pathInfo.equals("/")) {
             // 전체 게시글 조회
             List<Posts> postsList = postsService.getAllPosts();
@@ -108,8 +109,8 @@ public class PostsController extends HttpServlet {
     }
 
     // POST 요청 처리
-    private void handlePost(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
-        // pathInfo가 null이거나 "/" 또는 ""(빈 문자열)일 때 요청을 처리하도록 수정
+    private void handlePost(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        // pathInfo nullish "/" 또는 ""(빈 문자열)일 때 요청을 처리하도록 수정
         if (pathInfo == null || pathInfo.equals("/") || pathInfo.isEmpty()) {
             // JSON 요청 바디를 읽고 게시글 생성 처리
             try {
@@ -118,7 +119,7 @@ public class PostsController extends HttpServlet {
                 String title = requestBody.get("title").asText();
                 String content = requestBody.get("content").asText();
 
-                // PostsService를 통해 게시글 생성
+                // PostsService 통해 게시글 생성
                 Posts createdPost = postsService.createPost(userId, title, content);
                 // 생성된 게시글을 응답으로 반환
                 sendJsonResponse(resp, HttpServletResponse.SC_CREATED, objectMapper.valueToTree(createdPost));
@@ -157,6 +158,7 @@ public class PostsController extends HttpServlet {
 
     // DELETE 요청 처리
     private void handleDelete(String pathInfo, HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {
+        this.req = req;
         if (pathInfo != null && pathInfo.startsWith("/")) {
             Long postId = Long.parseLong(pathInfo.substring(1));
             boolean isDeleted = postsService.deletePost(postId);
